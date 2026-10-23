@@ -1,2 +1,15 @@
 gradio
 requests
+python-dotenv
+langgraph
+langchain-core
+langchain-google-genai
+langchain-community
+google-genai
+ddgs
+beautifulsoup4
+markdownify
+youtube-transcript-api
+pandas
+openpyxl
+huggingface_hub

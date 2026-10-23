@@ -1,0 +1,19 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS metadata (AppleDouble files created on external drives)
+._*
+.DS_Store
+
+# Local tooling state
+.omc/
+
+# Runtime data
+assets/
+
+# Local eval cache
+cache/

@@ -8,20 +8,24 @@ import pandas as pd
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
 
-# --- Basic Agent Definition ---
-# ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
-class BasicAgent:
+# --- Agent Definition ---
+# LangGraph agent lives in agent/; run_eval.solve downloads attachments and runs the graph.
+class GaiaAgent:
     def __init__(self):
-        print("BasicAgent initialized.")
-    def __call__(self, question: str) -> str:
-        print(f"Agent received question (first 50 chars): {question[:50]}...")
-        fixed_answer = "This is a default answer."
-        print(f"Agent returning fixed answer: {fixed_answer}")
-        return fixed_answer
+        from agent.agent import agent  # needs GOOGLE_API_KEY (Space Secret)
+        self.graph = agent
+        print("GaiaAgent initialized.")
+
+    def __call__(self, item: dict) -> str:
+        from run_eval import solve
+        print(f"Agent received question (first 50 chars): {item['question'][:50]}...")
+        answer = solve(self.graph, item)["answer"]
+        print(f"Agent returning answer: {answer}")
+        return answer
 
 def run_and_submit_all( profile: gr.OAuthProfile | None):
     """
-    Fetches all questions, runs the BasicAgent on them, submits all answers,
+    Fetches all questions, runs the GaiaAgent on them, submits all answers,
     and displays the results.
     """
     # --- Determine HF Space Runtime URL and Repo URL ---
@@ -40,7 +44,7 @@ def run_and_submit_all( profile: gr.OAuthProfile | None):
 
     # 1. Instantiate Agent ( modify this part to create your agent)
     try:
-        agent = BasicAgent()
+        agent = GaiaAgent()
     except Exception as e:
         print(f"Error instantiating agent: {e}")
         return f"Error initializing agent: {e}", None
@@ -80,7 +84,7 @@ def run_and_submit_all( profile: gr.OAuthProfile | None):
             print(f"Skipping item with missing task_id or question: {item}")
             continue
         try:
-            submitted_answer = agent(question_text)
+            submitted_answer = agent(item)
             answers_payload.append({"task_id": task_id, "submitted_answer": submitted_answer})
             results_log.append({"Task ID": task_id, "Question": question_text, "Submitted Answer": submitted_answer})
         except Exception as e:
@@ -142,7 +146,7 @@ def run_and_submit_all( profile: gr.OAuthProfile | None):
 
 # --- Build Gradio Interface using Blocks ---
 with gr.Blocks() as demo:
-    gr.Markdown("# Basic Agent Evaluation Runner")
+    gr.Markdown("# GAIA Agent Evaluation Runner")
     gr.Markdown(
         """
         **Instructions:**
@@ -192,5 +196,5 @@ if __name__ == "__main__":
 
     print("-"*(60 + len(" App Starting ")) + "\n")
 
-    print("Launching Gradio Interface for Basic Agent Evaluation...")
+    print("Launching Gradio Interface for GAIA Agent Evaluation...")
     demo.launch(debug=True, share=False)
