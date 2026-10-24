@@ -8,9 +8,14 @@ Each entry: the decision, why, and what it cost. Ordered roughly as they were ma
 |---|---|---|
 | 1 | first full run, `MAX_STEP = 8` | **12/20 (60%)** |
 | 2 | decisions 14–16 below, `MAX_STEP = 10`, only the 8 wrong questions rerun | **16/20 (80%)** |
+| 3 | same code, fresh full run of all 20 questions | **17/20 (85%)** |
 
-Remaining misses: bird species count in a video, chess move from a board image, NASA award
-number from a paper, Japanese baseball roster by jersey number.
+Remaining misses in run 3: bird species count in a video, chess move from a board image,
+Japanese baseball roster by jersey number. The NASA award number (wrong in run 2) was correct.
+
+Answers vary between runs on the same code: the bird count came back as 6 and 4, the chess
+move as `Nc3+` and `Qe1#`. A second and third fresh run were cut short by the free-tier daily
+quota, so run-to-run variance is observed but not yet measured.
 
 ---
 
@@ -67,7 +72,7 @@ number from a paper, Japanese baseball roster by jersey number.
 ### 13. Answer cache and separate run / submit commands
 - **Why:** a full run takes about 20 minutes and real quota. Caching per `task_id` means a crash or a single bad question costs one rerun, and submitting never re-runs the agent.
 
-## Fixes after reading run 1's traces (60% → 80%)
+## Fixes after reading run 1's traces (60% → 80–85%)
 
 ### 14. `run_python` takes `file_path`
 - **Symptom:** for the Excel question the model wrote `pd.read_excel("file.xlsx")` and then `os.walk("/")` inside the remote sandbox, used up every step, and returned an invented number (`12345.67`).

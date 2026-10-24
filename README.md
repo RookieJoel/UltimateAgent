@@ -1,12 +1,12 @@
 # UltimateAgent: HF Agents Course Unit 4 (GAIA)
 
 LangGraph agent on Gemini with a Plan → Act → Verify prompt and 7 tools. Official score on the
-course's 20 GAIA Level 1 questions: **16/20 (80%)**, up from 12/20 after fixes found in traces.
+course's 20 GAIA Level 1 questions: **17/20 (85%)**, up from 12/20 after fixes found in traces.
 
 ![LangGraph](docs/images/graph.png)
 
 - **[Architecture](docs/ARCHITECTURE.md)**: graph, tools, guards, a real execution trace from LangSmith
-- **[Design decisions](docs/DECISIONS.md)**: why each choice was made, what it cost, and what changed 60% → 80%
+- **[Design decisions](docs/DECISIONS.md)**: why each choice was made, what it cost, and what changed 60% → 85%
 
 ## Layout
 
