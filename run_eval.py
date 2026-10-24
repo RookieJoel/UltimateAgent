@@ -7,6 +7,7 @@ Usage (from the project root):
     python run_eval.py submit --username USER --space-id USER/SPACE
 """
 import argparse
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -27,6 +28,27 @@ def save_cache(cache: dict) -> None:
     CACHE_PATH.write_text(json.dumps(cache, indent=2, ensure_ascii=False))
 
 
+def trace_config(question: dict, file_name: str | None) -> dict:
+    """LangSmith run name, tags and metadata so each question's trace is easy to find and filter."""
+    from agent.agent import MAX_STEP
+    from agent.config import GEMINI_MODEL
+    from agent.prompts import SYSTEM_PROMPT
+
+    prompt_version = hashlib.sha1(SYSTEM_PROMPT.encode()).hexdigest()[:8]  # changes whenever the prompt is edited
+    tags = ["gaia", GEMINI_MODEL] + (["has-file"] if file_name else [])
+    return {
+        "run_name": f"gaia-{question['task_id'][:8]}",
+        "tags": tags,
+        "metadata": {
+            "task_id": question["task_id"],
+            "file_name": file_name,
+            "model": GEMINI_MODEL,
+            "max_step": MAX_STEP,
+            "prompt_version": prompt_version,
+        },
+    }
+
+
 def solve(agent, question: dict) -> dict:
     """Run the graph on one question and return the answer plus a short trace."""
     file_name = question.get("file_name") or None
@@ -37,7 +59,7 @@ def solve(agent, question: dict) -> dict:
     state = {"messages": [HumanMessage(content=question["question"])]}
     if file_name:
         state["file_path"] = file_name
-    out = agent.invoke(state)
+    out = agent.invoke(state, config=trace_config(question, file_name))
 
     tool_calls = [
         f"{call['name']}({json.dumps(call['args'], ensure_ascii=False)[:120]})"

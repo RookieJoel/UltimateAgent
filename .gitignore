@@ -17,3 +17,6 @@ assets/
 
 # Local eval cache
 cache/
+
+# LangGraph dev server state
+.langgraph_api/
