@@ -1,13 +1,3 @@
----
-title: UltimateAgent
-emoji: 🕵🏻‍♂️
-colorFrom: indigo
-colorTo: indigo
-sdk: static
-app_file: index.html
-pinned: false
----
-
 # UltimateAgent: HF Agents Course Unit 4 (GAIA)
 
 LangGraph agent on Gemini with a Plan → Act → Verify prompt and 7 tools. Official score on the
